@@ -43,19 +43,20 @@ class WhereAmIActivity : FragmentActivity() {
         locationViewModel = LocationViewModel(applicationContext)
 
         lifecycleScope.launch {
-            checkPermissions()
+            textView.text = "104"
+            // checkPermissions()
 
-            val location = locationViewModel.readLocationResult()
+            // val location = locationViewModel.readLocationResult()
 
-            if (location is ResolvedLocation) {
-                textView.text = getString(
-                    R.string.address_as_of_time_activity,
-                    getAddressDescription(location),
-                    getTimeAgo(location.location.time)
-                )
-            } else {
-                textView.setText(R.string.location_error)
-            }
+            // if (location is ResolvedLocation) {
+            //     textView.text = getString(
+            //         R.string.address_as_of_time_activity,
+            //         getAddressDescription(location),
+            //         getTimeAgo(location.location.time)
+            //     )
+            // } else {
+            //     textView.setText(R.string.location_error)
+            // }
         }
 
         forceComplicationUpdate()

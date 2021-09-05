@@ -34,7 +34,9 @@ class WhereAmITileProviderService : CoroutinesTileProviderService() {
 
     override suspend fun suspendTileRequest(requestParams: RequestBuilders.TileRequest): Tile {
         return withContext(Dispatchers.IO) {
-            val location = locationViewModel.readLocationResult()
+            // val location = locationViewModel.readLocationResult()
+
+            val response = "103"
 
             tile {
                 setResourcesVersion(STABLE_RESOURCES_VERSION)
@@ -47,7 +49,8 @@ class WhereAmITileProviderService : CoroutinesTileProviderService() {
 
                                 setModifiers(
                                     modifiers {
-                                        setSemantics(describeLocation(location).toContentDescription())
+//                                        setSemantics(describeLocation(location).toContentDescription())
+                                        setSemantics("BGL".toContentDescription())
                                         setClickable(
                                             activityClickable(
                                                 this@WhereAmITileProviderService.packageName,
@@ -62,7 +65,8 @@ class WhereAmITileProviderService : CoroutinesTileProviderService() {
                                         setFontStyle(fontStyle {
                                             setSize(16f.toSpProp())
                                         })
-                                        setText(describeLocation(location))
+                                        setText(response)
+                                        // setText(describeLocation(location))
                                     }
                                 )
                             }

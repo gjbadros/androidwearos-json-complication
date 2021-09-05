@@ -40,11 +40,11 @@ class WhereAmIComplicationProviderService : CoroutinesComplicationDataSourceServ
 
     override fun onCreate() {
         super.onCreate()
-        locationViewModel = LocationViewModel(applicationContext)
+        // locationViewModel = LocationViewModel(applicationContext)
     }
 
     override suspend fun onComplicationUpdate(complicationRequest: ComplicationRequest) =
-        toComplicationData(complicationRequest.complicationType, locationViewModel.readLocationResult())
+        toComplicationData(complicationRequest.complicationType/*, locationViewModel.readLocationResult() */)
 
     override fun getPreviewData(type: ComplicationType): ComplicationData {
         val location = Location(LocationManager.GPS_PROVIDER)
@@ -55,17 +55,17 @@ class WhereAmIComplicationProviderService : CoroutinesComplicationDataSourceServ
 
         val locationResult = ResolvedLocation(location, address)
 
-        return toComplicationData(type, locationResult)
+        return toComplicationData(type/*, locationResult */)
     }
 
     fun toComplicationData(
-        type: ComplicationType,
-        locationResult: LocationResult
+        type: ComplicationType
+        // , locationResult:LocationResult
     ): ComplicationData {
         return when (type) {
             ComplicationType.SHORT_TEXT -> ShortTextComplicationData.Builder(
-                getTimeAgoComplicationText(locationResult),
-                getAddressDescriptionText(locationResult)
+                getTimeAgoComplicationText(/*locationResult */),
+                getAddressDescriptionText(/* locationResult */)
             )
                 .setMonochromaticImage(
                     MonochromaticImage.Builder(
@@ -78,10 +78,10 @@ class WhereAmIComplicationProviderService : CoroutinesComplicationDataSourceServ
                 .setTapAction(tapAction())
                 .build()
             ComplicationType.LONG_TEXT -> LongTextComplicationData.Builder(
-                getAddressDescriptionText(locationResult),
-                getAddressDescriptionText(locationResult)
+                getAddressDescriptionText(/* locationResult */),
+                getAddressDescriptionText(/* locationResult */)
             )
-                .setTitle(getTimeAgoComplicationText(locationResult))
+                .setTitle(getTimeAgoComplicationText(/* locationResult */))
                 .setMonochromaticImage(
                     MonochromaticImage.Builder(
                         Icon.createWithResource(
@@ -106,25 +106,29 @@ class WhereAmIComplicationProviderService : CoroutinesComplicationDataSourceServ
         }
     }
 
-    fun getTimeAgoComplicationText(location: LocationResult): ComplicationText {
-        return if (location is ResolvedLocation) {
-            getTimeAgoComplicationText(location.location.time as Instant).build()
-        } else {
-            PlainComplicationText.Builder("--").build()
-        }
+    fun getTimeAgoComplicationText(/* location: LocationResult */): ComplicationText {
+        return PlainComplicationText.Builder("107").build()
+        // return if (location is ResolvedLocation) {
+        //     getTimeAgoComplicationText(location.location.time as Instant).build()
+        // } else {
+        //     PlainComplicationText.Builder("--").build()
+        // }
+
     }
 
-    fun getAddressDescriptionText(location: LocationResult): ComplicationText {
-        return if (location is ResolvedLocation) {
-            return PlainComplicationText.Builder(getAddressDescription(location)).build()
-        } else {
-            PlainComplicationText.Builder(getString(R.string.no_location)).build()
-        }
+    fun getAddressDescriptionText(): ComplicationText {
+        return          PlainComplicationText.Builder("101").build()
+        // return if (location is ResolvedLocation) {
+        //     return PlainComplicationText.Builder(getAddressDescription(location)).build()
+        // } else {
+        //     PlainComplicationText.Builder(getString(R.string.no_location)).build()
+        // }
+
     }
 
     companion object {
         fun Context.forceComplicationUpdate() {
-            if (applicationContext.checkCallingOrSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+//            if (applicationContext.checkCallingOrSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 val request = ComplicationDataSourceUpdateRequester.create(
                     applicationContext, ComponentName(
                         applicationContext, WhereAmIComplicationProviderService::class.java
@@ -132,6 +136,7 @@ class WhereAmIComplicationProviderService : CoroutinesComplicationDataSourceServ
                 )
                 request.requestUpdateAll()
             }
-        }
+            // }
+
     }
 }
