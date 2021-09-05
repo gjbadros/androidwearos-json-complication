@@ -31,6 +31,7 @@ import com.google.wear.whereami.data.LocationViewModel
 import com.google.wear.whereami.data.ResolvedLocation
 import com.google.wear.whereami.getAddressDescription
 import com.google.wear.whereami.kt.CoroutinesComplicationDataSourceService
+import java.time.Instant
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -95,7 +96,7 @@ class WhereAmIComplicationProviderService : CoroutinesComplicationDataSourceServ
         }
     }
 
-    fun getTimeAgoComplicationText(fromTime: Long): TimeDifferenceComplicationText.Builder {
+    fun getTimeAgoComplicationText(fromTime: Instant): TimeDifferenceComplicationText.Builder {
         return TimeDifferenceComplicationText.Builder(
             TimeDifferenceStyle.SHORT_SINGLE_UNIT,
             CountUpTimeReference(fromTime)
@@ -107,7 +108,7 @@ class WhereAmIComplicationProviderService : CoroutinesComplicationDataSourceServ
 
     fun getTimeAgoComplicationText(location: LocationResult): ComplicationText {
         return if (location is ResolvedLocation) {
-            getTimeAgoComplicationText(location.location.time).build()
+            getTimeAgoComplicationText(location.location.time as Instant).build()
         } else {
             PlainComplicationText.Builder("--").build()
         }
@@ -124,7 +125,7 @@ class WhereAmIComplicationProviderService : CoroutinesComplicationDataSourceServ
     companion object {
         fun Context.forceComplicationUpdate() {
             if (applicationContext.checkCallingOrSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                val request = ComplicationDataSourceUpdateRequester(
+                val request = ComplicationDataSourceUpdateRequester.create(
                     applicationContext, ComponentName(
                         applicationContext, WhereAmIComplicationProviderService::class.java
                     )

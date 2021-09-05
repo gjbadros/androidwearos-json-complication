@@ -23,7 +23,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.wear.tiles.RequestBuilders
 import androidx.wear.tiles.ResourceBuilders.Resources
 import androidx.wear.tiles.TileBuilders.Tile
-import androidx.wear.tiles.TileProviderService
+import androidx.wear.tiles.TileService
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import kotlinx.coroutines.async
@@ -31,7 +31,7 @@ import kotlinx.coroutines.guava.asListenableFuture
 
 const val STABLE_RESOURCES_VERSION = "1"
 
-abstract class CoroutinesTileProviderService : TileProviderService(), LifecycleOwner {
+abstract class CoroutinesTileProviderService : TileService(), LifecycleOwner {
     private val mDispatcher = ServiceLifecycleDispatcher(this)
 
     @CallSuper
@@ -72,5 +72,5 @@ abstract class CoroutinesTileProviderService : TileProviderService(), LifecycleO
     abstract suspend fun suspendTileRequest(requestParams: RequestBuilders.TileRequest): Tile
 
     override fun onResourcesRequest(requestParams: RequestBuilders.ResourcesRequest): ListenableFuture<Resources> =
-        Futures.immediateFuture(Resources.builder().setVersion(STABLE_RESOURCES_VERSION).build())
+        Futures.immediateFuture(Resources.Builder().setVersion(STABLE_RESOURCES_VERSION).build())
 }

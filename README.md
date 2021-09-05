@@ -6,3 +6,8 @@ display a human-readable address.
 
 Useful for smartwatch users who are blind or vision-impaired who would like to get their bearings
 quickly.
+
+
+See https://developer.android.com/training/wearables/get-started/debugging
+
+for info on sending this app to the watch.
